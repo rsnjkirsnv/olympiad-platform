@@ -1,7 +1,7 @@
 import re
 from decimal import Decimal
 
-from sqlalchemy import func, select
+from sqlalchemy import case, func, select
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import joinedload
 from werkzeug.exceptions import BadRequest
@@ -60,8 +60,23 @@ def attempts_for(user_id, page=1):
 
 
 def leaderboard_rows():
-    score = func.count(SolvedTask.id).label("score")
-    return db.session.execute(select(User.id, User.username, score)
-                              .outerjoin(SolvedTask, SolvedTask.user_id == User.id)
-                              .group_by(User.id)
-                              .order_by(score.desc(), User.username_key.asc(), User.id.asc())).all()
+    # Aggregate independently: joining raw attempts and solutions would multiply
+    # both counts for users who have solved more than one task.
+    solutions = (select(SolvedTask.user_id, func.count(SolvedTask.id).label("score"))
+                 .group_by(SolvedTask.user_id).subquery())
+    attempts = (select(
+        Attempt.user_id,
+        func.count(Attempt.id).label("attempt_count"),
+        func.sum(case((Attempt.is_correct.is_(True), 1), else_=0)).label("correct_count"),
+        func.sum(case((Attempt.is_correct.is_(False), 1), else_=0)).label("incorrect_count"),
+    ).group_by(Attempt.user_id).subquery())
+    score = func.coalesce(solutions.c.score, 0).label("score")
+    statement = (select(
+        User.id, User.username, score,
+        func.coalesce(attempts.c.attempt_count, 0).label("attempt_count"),
+        func.coalesce(attempts.c.correct_count, 0).label("correct_count"),
+        func.coalesce(attempts.c.incorrect_count, 0).label("incorrect_count"),
+    ).outerjoin(solutions, solutions.c.user_id == User.id)
+      .outerjoin(attempts, attempts.c.user_id == User.id)
+      .order_by(score.desc(), User.username_key.asc(), User.id.asc()))
+    return db.session.execute(statement).all()

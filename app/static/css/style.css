@@ -1436,6 +1436,22 @@ tbody tr:last-child td {
     background:#f9f8ff
 }
 
+.leaderboard {
+    min-width: 760px;
+}
+
+.leaderboard th,.leaderboard td {
+    padding-inline: 18px;
+}
+
+.leaderboard .participant {
+    min-width: 140px;
+}
+
+.leaderboard th {
+    white-space: normal;
+}
+
 .score-number {
     color:var(--primary);
     font-size:18px;
@@ -2094,7 +2110,7 @@ tbody tr:last-child td {
         min-width:570px
     }
     .table-scroll .leaderboard {
-        min-width:500px
+        min-width:760px
     }
     .table-task {
         font-size:12px

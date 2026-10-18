@@ -64,7 +64,10 @@ def history():
 
 @pages.get("/leaderboard")
 def leaderboard():
-    return render_template("leaderboard.html", leaders=leaderboard_rows())
+    personal_history = attempts_for(current_user.id) if current_user.is_authenticated else None
+    return render_template("leaderboard.html", leaders=leaderboard_rows(),
+                           recent_attempts=personal_history.items[:5] if personal_history else [],
+                           attempt_count=personal_history.total if personal_history else 0)
 
 
 @pages.post("/tasks/<int:task_id>/submit")
