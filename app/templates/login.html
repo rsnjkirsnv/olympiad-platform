@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<div class="auth-layout"><section class="auth-story"><p class="eyebrow">ПРОДОЛЖАЙТЕ С ТОГО ЖЕ МЕСТА</p><h1>Хорошая идея<br>заслуживает<br><span>ещё одной попытки.</span></h1><p>Ваши решения, баллы и история уже ждут вас.<br>Добро пожаловать обратно.</p><div class="auth-decoration" aria-hidden="true">∑ <span>→</span> ∞</div></section>
+<section class="auth-card"><span class="overline">РАДЫ ВАС ВИДЕТЬ</span><h2>Вход в аккаунт</h2><p class="muted">Впереди ещё много интересных задач.</p>
+{% if error %}<div class="notice notice-error" role="alert">{{ error }}</div>{% endif %}
+<form method="post" class="stack-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label for="username">Логин</label><input id="username" name="username" value="{{ username }}" maxlength="32" autocomplete="username" required placeholder="Ваш логин"><label for="password">Пароль</label><input id="password" name="password" type="password" maxlength="128" autocomplete="current-password" required placeholder="Введите пароль"><button class="button button-full" type="submit">Войти <span aria-hidden="true">→</span></button></form><p class="auth-switch">Ещё нет аккаунта? <a href="{{ url_for('auth.register') }}">Зарегистрироваться</a></p></section></div>
+{% endblock %}

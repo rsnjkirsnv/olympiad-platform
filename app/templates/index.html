@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="status-dot"></span> МЕСТО ДЛЯ ВАШИХ БУДУЩИХ ПОБЕД</p>
+    <h1>Большие победы<br>начинаются<br><span>с одной задачи.</span></h1>
+    <p class="hero-description">Тренируйте логику, находите неожиданные решения<br class="desktop-break"> и готовьтесь к олимпиадам в своём темпе.</p>
+    <div class="hero-actions"><a class="button" href="{{ url_for('pages.tasks') }}">Перейти к задачам <span aria-hidden="true">↗</span></a><a class="inline-link" href="{{ url_for('pages.leaderboard') }}">Смотреть рейтинг <span aria-hidden="true">→</span></a></div>
+    <div class="hero-note"><span class="check-circle" aria-hidden="true">✓</span> Бесплатно. Без ограничений на попытки.</div>
+  </div>
+  <div class="hero-art" aria-label="Иллюстрация: путь от первой задачи к новым достижениям" role="img">
+    <div class="art-grid"></div>
+    <span class="math-symbol symbol-one" aria-hidden="true">x²</span><span class="math-symbol symbol-two" aria-hidden="true">∞</span>
+    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+    <div class="floating-note note-top"><span class="note-icon" aria-hidden="true">✦</span><div><strong>Всё начинается с идеи</strong><small>А продолжается практикой</small></div></div>
+    <div class="art-card"><div class="art-card-top"><span class="badge badge-easy">Первый шаг</span><span aria-hidden="true">↗</span></div><div class="art-formula" aria-hidden="true">a² + b² = c²</div><div class="art-card-line"></div><p>У каждой задачи<br>есть своё решение.</p><div class="art-card-bottom"><span>Найдите ваше</span><span class="round-arrow" aria-hidden="true">→</span></div></div>
+    <div class="floating-note note-bottom"><span class="success-icon" aria-hidden="true">✓</span><div><strong>Маленький шаг — большой прогресс</strong><small>Одна задача ближе к цели</small></div></div>
+    <span class="art-spark" aria-hidden="true">✳</span>
+  </div>
+</section>
+<section class="metrics-strip" aria-label="О платформе">
+  <div><strong>{{ task_count }}</strong><span>задач для старта</span></div><div><strong>3</strong><span>уровня сложности</span></div><div><strong>+1</strong><span>балл за новое решение</span></div><div><strong>∞</strong><span>попыток, чтобы разобраться</span></div>
+</section>
+<section class="how-section">
+  <div class="section-heading"><div><p class="eyebrow">ОТ ЛЮБОПЫТСТВА К РЕЗУЛЬТАТУ</p><h2>Ваш следующий шаг</h2></div><span class="muted">В своём темпе. С видимым прогрессом.</span></div>
+  <div class="feature-grid"><article class="feature"><span class="feature-icon lavender" aria-hidden="true">⌘</span><h3>Выберите задачу</h3><p>Начните с лёгкой или сразу бросьте себе вызов. Математика и информатика ждут.</p><a class="inline-link" href="{{ url_for('pages.tasks') }}">Открыть каталог →</a></article><article class="feature"><span class="feature-icon peach" aria-hidden="true">✧</span><h3>Проверьте свою идею</h3><p>Введите ответ и сразу узнайте результат. Ошибаться можно — так и учатся.</p><a class="inline-link" href="{{ url_for('pages.tasks') }}">Попробовать решить →</a></article><article class="feature"><span class="feature-icon mint" aria-hidden="true">↗</span><h3>Следите за ростом</h3><p>Каждое новое решение приносит балл. Вся история и достижения — в вашем кабинете.</p><a class="inline-link" href="{{ url_for('pages.profile') if current_user.is_authenticated else url_for('auth.register') }}">{{ 'Мой прогресс' if current_user.is_authenticated else 'Создать аккаунт' }} →</a></article></div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="theme-color" content="#5046dc">
+  <meta name="description" content="Решайте олимпиадные задачи по математике и информатике. Сохраняйте прогресс и двигайтесь к новым победам.">
+  <title>{% block title %}Главная{% endblock %} · Олимпиадная платформа</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="{{ url_for('pages.index') }}" aria-label="Олимпиадная платформа — главная">
+        <span class="brand-mark" aria-hidden="true">∑</span><span>Олимпиадная<span class="brand-sub">платформа</span></span>
+      </a>
+      <button class="menu-toggle" type="button" aria-controls="navigation" aria-expanded="false">Меню <span aria-hidden="true">☰</span></button>
+      <nav id="navigation" class="navigation" aria-label="Главное меню">
+        <a class="nav-link {{ 'active' if request.endpoint == 'pages.index' }}" href="{{ url_for('pages.index') }}">Главная</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'pages.tasks' }}" href="{{ url_for('pages.tasks') }}">Задачи</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'pages.leaderboard' }}" href="{{ url_for('pages.leaderboard') }}">Таблица лидеров</a>
+        {% if current_user.is_authenticated %}
+        <a class="nav-link {{ 'active' if request.endpoint == 'pages.history' }}" href="{{ url_for('pages.history') }}">История</a>
+        {% endif %}
+        <div class="nav-account">
+          {% if current_user.is_authenticated %}
+          <a class="account-link {{ 'active' if request.endpoint == 'pages.profile' }}" href="{{ url_for('pages.profile') }}"><span class="avatar avatar-small" aria-hidden="true">{{ current_user.username[0]|upper }}</span><span>Личный кабинет</span></a>
+          <form action="{{ url_for('auth.logout') }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="text-button" type="submit">Выйти</button></form>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('auth.login') }}">Войти</a>
+          <a class="button button-small" href="{{ url_for('auth.register') }}">Начать учиться <span aria-hidden="true">↗</span></a>
+          {% endif %}
+        </div>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}<div class="flash-list" aria-live="polite">{% for category, message in messages %}<div class="notice notice-{{ category }}" role="status">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer container"><span>Олимпиадная платформа</span><span>Думайте. Пробуйте. Находите решение.</span><a href="{{ url_for('pages.tasks') }}">К задачам <span aria-hidden="true">↗</span></a></footer>
+</body>
+</html>
